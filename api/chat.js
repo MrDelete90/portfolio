@@ -33,44 +33,60 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "Message is required" });
   }
 
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-  const url =
-    "https://generativelanguage.googleapis.com/v1beta/models/" +
-    model +
-    ":generateContent";
+  const modelsToTry = [
+    process.env.GEMINI_MODEL,
+    "gemini-flash-latest",
+    "gemini-3.8-flash",
+    "gemini-3.7-flash",
+    "gemini-3.5-flash-lite"
+  ].filter(Boolean);
 
-  try {
-    const apiResponse = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey
-      },
-      body: JSON.stringify({
-        system_instruction: { parts: [{ text: PORTFOLIO_INFO }] },
-        contents: [{ role: "user", parts: [{ text: message.slice(0, 500) }] }]
-      })
-    });
+  let lastError = "";
 
-    if (!apiResponse.ok) {
-      const errorText = await apiResponse.text();
-      console.error("Gemini error:", errorText);
-      return res.status(502).json({ error: "API request failed" });
+  for (const model of modelsToTry) {
+    const url =
+      "https://generativelanguage.googleapis.com/v1beta/models/" +
+      model +
+      ":generateContent";
+
+    try {
+      const apiResponse = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: PORTFOLIO_INFO }] },
+          contents: [{ role: "user", parts: [{ text: message.slice(0, 500) }] }]
+        })
+      });
+
+      if (apiResponse.ok) {
+        const data = await apiResponse.json();
+        const reply =
+          data.candidates &&
+          data.candidates[0] &&
+          data.candidates[0].content &&
+          data.candidates[0].content.parts &&
+          data.candidates[0].content.parts[0].text;
+        return res.status(200).json({
+          reply: reply || "Sorry, I could not generate a reply."
+        });
+      }
+
+      lastError = model + ": " + (await apiResponse.text());
+      console.error("Gemini error with " + model + ":", lastError);
+
+      // Only try the next model if this one was not found or not supported
+      if (apiResponse.status !== 404 && apiResponse.status !== 400) {
+        break;
+      }
+    } catch (error) {
+      lastError = String(error);
+      console.error(error);
     }
-
-    const data = await apiResponse.json();
-    const reply =
-      data.candidates &&
-      data.candidates[0] &&
-      data.candidates[0].content &&
-      data.candidates[0].content.parts &&
-      data.candidates[0].content.parts[0].text;
-
-    return res.status(200).json({
-      reply: reply || "Sorry, I could not generate a reply."
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Server error" });
   }
+
+  return res.status(502).json({ error: "API request failed", detail: lastError });
 };
