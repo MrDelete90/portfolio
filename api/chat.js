@@ -18,12 +18,52 @@ PROJECTS:
 5. Book Reading List Application: Users add books with title and author, mark them read or unread, delete them and filter by All, Read or Unread. Books are stored in an array and saved in the browser using localStorage, so they stay after a refresh. GitHub: https://github.com/MrDelete90/book-reading-list Live: https://quiz-kmo2.vercel.app/
 `;
 
+const BASE_URL = "https://api.groq.com/openai/v1";
+
+async function askModel(apiKey, model, message) {
+  return fetch(BASE_URL + "/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + apiKey
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: [
+        { role: "system", content: PORTFOLIO_INFO },
+        { role: "user", content: message.slice(0, 500) }
+      ],
+      temperature: 0.4,
+      max_tokens: 400
+    })
+  });
+}
+
+// Ask Groq which models this key can use (skips audio/safety models)
+async function discoverModels(apiKey) {
+  try {
+    const r = await fetch(BASE_URL + "/models", {
+      headers: { "Authorization": "Bearer " + apiKey }
+    });
+    if (!r.ok) return [];
+    const data = await r.json();
+    return (data.data || [])
+      .map(function (m) { return m.id; })
+      .filter(function (id) {
+        return !/whisper|tts|guard|orpheus|playai|safeguard|embed/i.test(id);
+      })
+      .slice(0, 6);
+  } catch (e) {
+    return [];
+  }
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: "API key is not configured" });
   }
@@ -33,58 +73,52 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: "Message is required" });
   }
 
-  const modelsToTry = [
-    process.env.GEMINI_MODEL,
-    "gemini-flash-latest",
-    "gemini-3.8-flash",
-    "gemini-3.7-flash",
-    "gemini-3.5-flash-lite"
+  let models = [
+    process.env.GROQ_MODEL,
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant"
   ].filter(Boolean);
 
   let lastError = "";
+  let discovered = false;
 
-  for (const model of modelsToTry) {
-    const url =
-      "https://generativelanguage.googleapis.com/v1beta/models/" +
-      model +
-      ":generateContent";
-
+  for (let i = 0; i < models.length; i++) {
+    const model = models[i];
     try {
-      const apiResponse = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey
-        },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: PORTFOLIO_INFO }] },
-          contents: [{ role: "user", parts: [{ text: message.slice(0, 500) }] }]
-        })
-      });
+      const apiResponse = await askModel(apiKey, model, message);
 
       if (apiResponse.ok) {
         const data = await apiResponse.json();
         const reply =
-          data.candidates &&
-          data.candidates[0] &&
-          data.candidates[0].content &&
-          data.candidates[0].content.parts &&
-          data.candidates[0].content.parts[0].text;
+          data.choices &&
+          data.choices[0] &&
+          data.choices[0].message &&
+          data.choices[0].message.content;
         return res.status(200).json({
           reply: reply || "Sorry, I could not generate a reply."
         });
       }
 
       lastError = model + ": " + (await apiResponse.text());
-      console.error("Gemini error with " + model + ":", lastError);
+      console.error("Groq error with " + model + ":", lastError);
 
-      // Only try the next model if this one was not found or not supported
-      if (apiResponse.status !== 404 && apiResponse.status !== 400) {
-        break;
+      // Not found / not supported: try the next one
+      if (apiResponse.status === 404 || apiResponse.status === 400) {
+        // After the built-in names fail, add models the key can actually use
+        if (i === models.length - 1 && !discovered) {
+          discovered = true;
+          const found = await discoverModels(apiKey);
+          models = models.concat(
+            found.filter(function (id) { return models.indexOf(id) === -1; })
+          );
+        }
+        continue;
       }
+      break; // wrong key, rate limit, etc: stop
     } catch (error) {
       lastError = String(error);
       console.error(error);
+      break;
     }
   }
 
