@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akash Kumar | Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <span class="logo">Akash Kumar</span>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#chatbot">AI Chatbot</a></li>
+      </ul>
+      <button id="themeToggle">Switch to Dark Mode</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="profile-photo avatar">AK</div>
+      <div>
+        <h1>Hi, I'm Akash Kumar</h1>
+        <p class="tagline">B.Tech CSE student at JECRC University, interested in programming and embedded systems.</p>
+        <a class="btn" href="#projects">View My Projects</a>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2>About Me</h2>
+      <p>I am a second-year B.Tech Computer Science and Engineering student at JECRC University. I enjoy writing code in Python, Java and Rust, and building hardware projects with Arduino and embedded systems. I am learning web development and using AI tools like Cursor to build and improve my projects.</p>
+      <p><strong>Education:</strong> B.Tech CSE (2nd Year), JECRC University</p>
+    </section>
+
+    <section id="skills">
+      <h2>Skills</h2>
+      <ul class="skills-list">
+        <li>Java</li>
+        <li>Python</li>
+        <li>Rust</li>
+        <li>Arduino</li>
+        <li>Embedded Systems</li>
+        <li>HTML, CSS, JavaScript</li>
+        <li>Git and GitHub</li>
+      </ul>
+    </section>
+
+    <section id="projects">
+      <h2>My Projects</h2>
+      <input type="text" id="projectSearch" placeholder="Search by name or technology (e.g. Python, Quiz, Book)">
+      <div class="project-grid">
+
+        <article class="project-card" data-tech="Python programs factorial fibonacci dictionary">
+          <h3>Python Programs Collection</h3>
+          <p>Factorial, Fibonacci and structure-to-dictionary conversion programs, with a README.</p>
+          <p class="tech"><strong>Technologies:</strong> Python</p>
+          <div class="card-links">
+            <a href="https://github.com/MrDelete90/python-program" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-tech="Python messy code improvement refactor AI Cursor">
+          <h3>Messy Python Code Improvement</h3>
+          <p>A messy Python script cleaned up with AI assistance: better names, formatting and simpler logic.</p>
+          <p class="tech"><strong>Technologies:</strong> Python, Cursor AI</p>
+          <div class="card-links">
+            <a href="https://github.com/MrDelete90/messy-code-improvement" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-tech="Python bug fixing debugging Cursor AI">
+          <h3>Bug Fixing Using Cursor AI</h3>
+          <p>A buggy program with wrong average and largest-number logic, found and corrected using Cursor.</p>
+          <p class="tech"><strong>Technologies:</strong> Python, Cursor AI</p>
+          <div class="card-links">
+            <a href="https://github.com/MrDelete90/bug-fixing-cursor" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-tech="Quiz HTML CSS JavaScript interactive">
+          <h3>Interactive Quiz Application</h3>
+          <p>A 5-question multiple-choice quiz that shows one question at a time and the final score.</p>
+          <p class="tech"><strong>Technologies:</strong> HTML, CSS, JavaScript</p>
+          <div class="card-links">
+            <a href="https://github.com/MrDelete90/quiz" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://quiz-hazel-sigma-87.vercel.app/" target="_blank" rel="noopener">Live Demo</a>
+          </div>
+        </article>
+
+        <article class="project-card" data-tech="Book reading list HTML CSS JavaScript localStorage">
+          <h3>Book Reading List Application</h3>
+          <p>Add books, mark them read or unread, delete them and filter the list. Data is saved with localStorage.</p>
+          <p class="tech"><strong>Technologies:</strong> HTML, CSS, JavaScript, localStorage</p>
+          <div class="card-links">
+            <a href="https://github.com/MrDelete90/book-reading-list" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://quiz-kmo2.vercel.app/" target="_blank" rel="noopener">Live Demo</a>
+          </div>
+        </article>
+
+      </div>
+      <p id="noResults" hidden>No projects found.</p>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Information</h2>
+      <ul class="contact-list">
+        <li><strong>Email:</strong> <a href="mailto:akashjecrc@gmail.com">akashjecrc@gmail.com</a></li>
+        <li><strong>GitHub:</strong> <a href="https://github.com/MrDelete90" target="_blank" rel="noopener">github.com/MrDelete90</a></li>
+        <li><strong>College:</strong> JECRC University</li>
+      </ul>
+    </section>
+
+    <section id="chatbot">
+      <h2>AI Chatbot</h2>
+      <p>Ask me anything about Akash's skills and projects.</p>
+      <div id="chatWindow">
+        <p class="bot-msg">Hi! Ask me about my skills, projects or GitHub.</p>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Type your question...">
+        <button id="chatSend">Send</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Akash Kumar. All rights reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
