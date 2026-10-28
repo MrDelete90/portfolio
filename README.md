@@ -3,7 +3,7 @@
 A responsive personal portfolio website with project search, light/dark mode and an AI chatbot that answers questions about my skills and projects.
 
 ## Live Website
-[PASTE YOUR VERCEL LINK HERE]
+https://portfolio-nine-eosin-94.vercel.app/
 
 ## Features
 - Sections: Home, About Me, Skills, Projects, Contact Information, AI Chatbot
