@@ -33,5 +33,10 @@ The browser sends the question to `/api/chat`, a Vercel serverless function. The
 4. Deploy by importing the repository into Vercel.
 
 ## Contact
+<<<<<<< HEAD
 - Email: ashishjecrc@gmail.com
 - GitHub: https://github.com/MrDelete90
+=======
+- Email: akashjecrc@gmail.com
+- GitHub: https://github.com/MrDelete90
+>>>>>>> 3bf34af8423046bf522dd75985061f63e2c667dd
