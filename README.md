@@ -1,4 +1,4 @@
-# Ashish Nehra | Personal Portfolio
+# Akash kumar | Personal Portfolio
 
 A responsive personal portfolio website with project search, light/dark mode and an AI chatbot that answers questions about my skills and projects.
 
@@ -34,7 +34,7 @@ The browser sends the question to `/api/chat`, a Vercel serverless function. The
 
 ## Contact
 <<<<<<< HEAD
-- Email: ashishjecrc@gmail.com
+- Email: akashjecrc@gmail.com
 - GitHub: https://github.com/MrDelete90
 =======
 - Email: akashjecrc@gmail.com
