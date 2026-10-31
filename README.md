@@ -1,9 +1,9 @@
-# Akash Kumar | Personal Portfolio
+# Ashish Nehra | Personal Portfolio
 
 A responsive personal portfolio website with project search, light/dark mode and an AI chatbot that answers questions about my skills and projects.
 
 ## Live Website
-[PASTE YOUR VERCEL LINK HERE]
+https://portfolio-nine-eosin-94.vercel.app/
 
 ## Features
 - Sections: Home, About Me, Skills, Projects, Contact Information, AI Chatbot
@@ -33,5 +33,5 @@ The browser sends the question to `/api/chat`, a Vercel serverless function. The
 4. Deploy by importing the repository into Vercel.
 
 ## Contact
-- Email: akashjecrc@gmail.com
+- Email: ashishjecrc@gmail.com
 - GitHub: https://github.com/MrDelete90
